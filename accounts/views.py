@@ -6,12 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
 import json
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth import authenticate, login, logout
 
 # From this app
 from .forms import NewUserForm
 
 # SignUp page's view
-# @unauthenticated_user
+@unauthenticated_user
 @csrf_exempt
 def signUpView(request):
     if request.method == 'POST':
@@ -35,8 +37,6 @@ def signUpView(request):
                 'messages': messages_data
             }
 
-            print(response_data)
-
             return HttpResponse(json.dumps(response_data), content_type='application/json')
 
         else:
@@ -52,8 +52,6 @@ def signUpView(request):
                 }
                 messages_data.append(message_data)
 
-            print(message_data)
-
             response_data = {
                 'success': False,
                 'messages': messages_data
@@ -65,15 +63,53 @@ def signUpView(request):
     return render_nextjs_page_sync(request)
 
 # SignIn page's view
-# @unauthenticated_user
+@unauthenticated_user
 @csrf_exempt
 def signInView(request):
     if request.method == 'POST':
-        print("ok")
-        # form = NewUserForm(request.POST)
-        # if form.is_valid():
-            # user = form.save()
+        form = AuthenticationForm(request, data=request.POST)
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
 
+            if request.user.is_staff:
+                isStaff = True
+            else:
+                isStaff = False
 
+            response_data = {
+                'success': True,
+                'isStaff': isStaff
+            }
+
+            return HttpResponse(json.dumps(response_data), content_type='application/json')
+        else:
+            messages.error(request, 'Wrong username or password')
+
+            for error in form.errors.values():
+                messages.error(request, error)
+                
+            messages_data = []
+            for message in messages.get_messages(request):
+                message_data = {
+                    'level': message.level,
+                    'message': message.message,
+                    'extra_tags': message.tags
+                }
+                messages_data.append(message_data)
+
+            response_data = {
+                'success': False,
+                'messages': messages_data
+            }
+                
+            return HttpResponse(json.dumps(response_data), content_type='application/json')
 
     return render_nextjs_page_sync(request)
+
+@csrf_exempt
+def logoutUser(request):
+    logout(request)
+    return HttpResponse()

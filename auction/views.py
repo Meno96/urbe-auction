@@ -8,13 +8,36 @@ from .forms import AddUriToArray
 import requests
 import json
 from django.http import HttpResponse
-
+from django.contrib.auth.decorators import login_required
+from django.db import connections
+from .models import Auction
+from django.core.cache import caches
 
 # Create your views here.
+@login_required(login_url='accounts:sign-in')
 @csrf_exempt
 def homePageView(request):
+    if request.method == 'POST':
+        if os.getenv('REDIS_URL'):
+            nftId = request.POST.get('nftId')
+            bidder = request.POST.get('bidder')
+            bidPrice = request.POST.get('bidPrice')
+            
+            cache = caches['auctions']
 
-    # return render(request, "homepage.html", {})
+            all_bids = cache.get(nftId) or {}
+
+            # aggiunge la nuova puntata alla lista delle puntate
+            bid = {'bidder': bidder, 'bidPrice': bidPrice}
+            all_bids.setdefault('bids', []).append(bid)
+
+            # salva il dizionario di tutte le puntate per l'oggetto
+            cache.set(nftId, all_bids, None)
+
+            all_bids = cache.get(nftId) or {}
+            bids_list = all_bids.get('bids', [])
+            
+            return HttpResponse()
     return render_nextjs_page_sync(request)
 
 @csrf_exempt
