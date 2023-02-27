@@ -10,8 +10,9 @@ import json
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db import connections
-from .models import Auction
+from .models import EndAuction
 from django.core.cache import caches
+from .decorators import only_staff
 
 # Create your views here.
 @login_required(login_url='accounts:sign-in')
@@ -99,3 +100,20 @@ def addNft(request):
            
 
     return render_nextjs_page_sync(request)
+
+@only_staff
+@csrf_exempt
+def endAuction(request):
+    if request.method == 'POST':
+        nftId = request.POST.get('nftId')
+        winner = request.POST.get('winner')
+        price = request.POST.get('price')
+
+        print(nftId)
+        print(winner)
+        print(price)
+
+        auctionEnd = EndAuction (nftId=nftId, winner=winner, price=price)
+        auctionEnd.save()
+
+    return HttpResponse()

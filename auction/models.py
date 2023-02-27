@@ -8,10 +8,11 @@ class AddUriToArrayForm(models.Model):
     def __str__(self):
         return self.name
     
-class Auction(models.Model):
-    itemName = models.CharField(max_length=200)
-    bidder = models.CharField(max_length=200)
-    bidPrice = models.DecimalField(max_digits=10, decimal_places=6)
+class EndAuction(models.Model):
+    nftId = models.IntegerField(primary_key=True)
+    winner = models.CharField(max_length=200)
+    price = models.IntegerField()
 
     def __str__(self):
-        return self.itemName
+        return str(self.nftId)
+
