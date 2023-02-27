@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django_nextjs',
     'corsheaders',
     'django_redis',
+    'rest_framework',
 ]
 
 REACT_APP = {

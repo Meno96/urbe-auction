@@ -23,42 +23,42 @@ def signUpView(request):
 
             messages.success(request, 'Account successfully created.')
 
-            messages_data = []
+            messagesData = []
             for message in messages.get_messages(request):
-                message_data = {
+                messageData = {
                     'level': message.level,
                     'message': message.message,
                     'extra_tags': message.tags
                 }
-                messages_data.append(message_data)
+                messagesData.append(messageData)
 
-            response_data = {
+            responseData = {
                 'success': True,
-                'messages': messages_data
+                'messages': messagesData
             }
 
-            return HttpResponse(json.dumps(response_data), content_type='application/json')
+            return HttpResponse(json.dumps(responseData), content_type='application/json')
 
         else:
             for error in form.errors.values():
                 messages.error(request, error)
                 
-            messages_data = []
+            messagesData = []
             for message in messages.get_messages(request):
-                message_data = {
+                messageData = {
                     'level': message.level,
                     'message': message.message[0],
                     'extra_tags': message.tags
                 }
-                messages_data.append(message_data)
+                messagesData.append(messageData)
 
-            response_data = {
+            responseData = {
                 'success': False,
-                'messages': messages_data
+                'messages': messagesData
             }
                 
 
-            return HttpResponse(json.dumps(response_data), content_type='application/json')
+            return HttpResponse(json.dumps(responseData), content_type='application/json')
 
     return render_nextjs_page_sync(request)
 
@@ -79,33 +79,33 @@ def signInView(request):
             else:
                 isStaff = False
 
-            response_data = {
+            responseData = {
                 'success': True,
                 'isStaff': isStaff
             }
 
-            return HttpResponse(json.dumps(response_data), content_type='application/json')
+            return HttpResponse(json.dumps(responseData), content_type='application/json')
         else:
             messages.error(request, 'Wrong username or password')
 
             for error in form.errors.values():
                 messages.error(request, error)
                 
-            messages_data = []
+            messagesData = []
             for message in messages.get_messages(request):
-                message_data = {
+                messageData = {
                     'level': message.level,
                     'message': message.message,
                     'extra_tags': message.tags
                 }
-                messages_data.append(message_data)
+                messagesData.append(messageData)
 
-            response_data = {
+            responseData = {
                 'success': False,
-                'messages': messages_data
+                'messages': messagesData
             }
                 
-            return HttpResponse(json.dumps(response_data), content_type='application/json')
+            return HttpResponse(json.dumps(responseData), content_type='application/json')
 
     return render_nextjs_page_sync(request)
 

@@ -7,17 +7,30 @@ import os
 from .forms import AddUriToArray
 import requests
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db import connections
 from .models import EndAuction
 from django.core.cache import caches
 from .decorators import only_staff
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-# Create your views here.
+@api_view(['GET'])
+def userInfo(request):
+    user = request.user
+    if user is not None:
+        isStaff = user.is_staff
+        data = {
+            'username': user.username,
+            'isStaff': isStaff,
+        }
+        return Response(data)
+
 @login_required(login_url='accounts:sign-in')
 @csrf_exempt
 def homePageView(request):
+    
     if request.method == 'POST':
         if os.getenv('REDIS_URL'):
             nftId = request.POST.get('nftId')
@@ -35,10 +48,11 @@ def homePageView(request):
             # salva il dizionario di tutte le puntate per l'oggetto
             cache.set(nftId, all_bids, None)
 
-            all_bids = cache.get(nftId) or {}
-            bids_list = all_bids.get('bids', [])
+            allBids = cache.get(nftId) or {}
+            bidsList = allBids.get('bids', [])
             
             return HttpResponse()
+        
     return render_nextjs_page_sync(request)
 
 @csrf_exempt
@@ -95,10 +109,6 @@ def addNft(request):
             jsonTokenUri = {'tokenUri': tokenUri}
             return HttpResponse(json.dumps(jsonTokenUri), content_type='application/json')
 
-
-
-           
-
     return render_nextjs_page_sync(request)
 
 @only_staff
@@ -109,11 +119,35 @@ def endAuction(request):
         winner = request.POST.get('winner')
         price = request.POST.get('price')
 
-        print(nftId)
-        print(winner)
-        print(price)
-
         auctionEnd = EndAuction (nftId=nftId, winner=winner, price=price)
         auctionEnd.save()
 
+        cache = caches['auctions']
+
+        allBids = cache.get(nftId) or {}
+        bidsList = allBids.get('bids', [])
+
+        # Creazione del dizionario
+        auctionData = {
+            'winner': winner,
+            'price': price,
+            'bids': bidsList,
+        }
+
+        # Conversione in JSON
+        auctionJson = json.dumps(auctionData)
+
+        # Restituzione della risposta HTTP con il JSON
+        return HttpResponse(auctionJson, content_type='application/json')
+
     return HttpResponse()
+
+@csrf_exempt
+def sellNft(request):
+
+    return render_nextjs_page_sync(request)
+
+@csrf_exempt
+def account(request):
+
+    return render_nextjs_page_sync(request)
