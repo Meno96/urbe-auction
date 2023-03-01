@@ -10,27 +10,72 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db import connections
-from .models import EndAuction
+from .models import EndAuction, IpAddress
 from django.core.cache import caches
 from .decorators import only_staff
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+from datetime import datetime
+
+# Return actual IP
+@csrf_exempt
+def getActualIP(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+# Create IP object with actual date
+@csrf_exempt
+def addIp(actualIp):
+    ipAddress = IpAddress(
+        ipAddress=actualIp, pubDate=datetime.now())
+    ipAddress.save()
 
 @api_view(['GET'])
 def userInfo(request):
     user = request.user
     if user is not None:
         isStaff = user.is_staff
+
+        # Stores the last IP that have logged in to the platform as admin, shows a warning 
+        # message when this is different from the previous one
+        checkIp = None
+        if request.user.is_staff:
+            dbIp = IpAddress.objects.all().values().last()
+            actualIp = getActualIP(request)
+
+            if not dbIp:
+                addIp(actualIp)
+            else:
+                if actualIp != dbIp['ipAddress']:
+                    addIp(actualIp)
+                    checkIp = True
+
         data = {
             'username': user.username,
             'isStaff': isStaff,
+            'checkIp': checkIp,
         }
+
         return Response(data)
+
+@api_view(['GET'])
+def fetchTxHash(request):
+    tokenId = request.META.get('HTTP_TOKENID')
+    try:
+        txHash = EndAuction.objects.get(nftId=tokenId).txHash
+    except EndAuction.DoesNotExist:
+        return Response({'error': 'No element found for tokenId'}, status=status.HTTP_404_NOT_FOUND)
+    return Response({'txHash': txHash})
 
 @login_required(login_url='accounts:sign-in')
 @csrf_exempt
-def homePageView(request):
-    
+def homePageView(request):    
     if request.method == 'POST':
         if os.getenv('REDIS_URL'):
             nftId = request.POST.get('nftId')
@@ -118,27 +163,12 @@ def endAuction(request):
         nftId = request.POST.get('nftId')
         winner = request.POST.get('winner')
         price = request.POST.get('price')
+        txHash = request.POST.get('txHash')
 
-        auctionEnd = EndAuction (nftId=nftId, winner=winner, price=price)
+        auctionEnd = EndAuction (nftId=nftId, winner=winner, price=price, txHash=txHash)
         auctionEnd.save()
 
-        cache = caches['auctions']
-
-        allBids = cache.get(nftId) or {}
-        bidsList = allBids.get('bids', [])
-
-        # Creazione del dizionario
-        auctionData = {
-            'winner': winner,
-            'price': price,
-            'bids': bidsList,
-        }
-
-        # Conversione in JSON
-        auctionJson = json.dumps(auctionData)
-
-        # Restituzione della risposta HTTP con il JSON
-        return HttpResponse(auctionJson, content_type='application/json')
+        return HttpResponse()
 
     return HttpResponse()
 
