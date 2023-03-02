@@ -1,15 +1,29 @@
 {
+    "version": 2,
     "builds": [
         {
-            "src": "urbe-django/wsgi.py",
-            "use": "@vercel/python",
-            "config": { "maxLambdaSize": "15mb", "runtime": "python3.10.6" }
+            "src": "package.json",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "next.config.js",
+            "use": "@vercel/next"
+        },
+        {
+            "src": "backend/**",
+            "use": "@vercel/python"
         }
     ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "urbe-django/wsgi.py"
-        }
-    ]
+        { "src": "/api/(.*)", "dest": "backend/api/$1" },
+        { "src": "/(.*)", "dest": "/public/$1" }
+    ],
+    "env": {
+        "REDIS_URL": "redis://redis-14301.c135.eu-central-1-1.ec2.cloud.redislabs.com:14301",
+        "REDIS_PASSWORD": "9L27MC6wimmm9gVViL2Z8GarZ0LRx22D"
+    },
+    "public": true,
+    "output": {
+        "directory": "public"
+    }
 }
