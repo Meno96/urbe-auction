@@ -26,8 +26,5 @@
         },
         "command": "cd frontend && yarn install && yarn build && cd .. && python manage.py collectstatic --noinput && python manage.py migrate"
     },
-    "public": true,
-    "output": {
-        "directory": "frontend/public"
-    }
+    "public": true
 }
