@@ -2,11 +2,11 @@
     "version": 2,
     "builds": [
         {
-            "src": "package.json",
+            "src": "frontend/package.json",
             "use": "@vercel/node"
         },
         {
-            "src": "next.config.js",
+            "src": "frontend/next.config.js",
             "use": "@vercel/next"
         },
         {
@@ -15,12 +15,29 @@
         }
     ],
     "routes": [
-        { "src": "/api/(.*)", "dest": "backend/api/$1" },
-        { "src": "/(.*)", "dest": "/public/$1" }
+        {
+            "src": "/api/(.*)",
+            "dest": "backend/api/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/frontend/out/$1"
+        }
     ],
     "env": {
-        "REDIS_URL": "redis://redis-14301.c135.eu-central-1-1.ec2.cloud.redislabs.com:14301",
-        "REDIS_PASSWORD": "9L27MC6wimmm9gVViL2Z8GarZ0LRx22D"
+        "DJANGO_SETTINGS_MODULE": "mysite.settings",
+        "PYTHONUNBUFFERED": "1",
+        "SECRET_KEY": "your-secret-key-here",
+        "NEXT_PUBLIC_API_URL": "/api"
     },
-    "public": true
+    "build": {
+        "env": {
+            "NEXT_PUBLIC_API_URL": "/api"
+        },
+        "command": "cd frontend && yarn install && yarn build && cd ../backend && python manage.py collectstatic --noinput && python manage.py migrate"
+    },
+    "public": true,
+    "output": {
+        "directory": "public"
+    }
 }
