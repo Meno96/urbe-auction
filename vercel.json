@@ -22,8 +22,5 @@
         "REDIS_URL": "redis://redis-14301.c135.eu-central-1-1.ec2.cloud.redislabs.com:14301",
         "REDIS_PASSWORD": "9L27MC6wimmm9gVViL2Z8GarZ0LRx22D"
     },
-    "public": true,
-    "output": {
-        "directory": "public"
-    }
+    "public": true
 }
