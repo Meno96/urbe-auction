@@ -10,7 +10,7 @@
             "use": "@vercel/next"
         },
         {
-            "src": "backend/**",
+            "src": ".",
             "use": "@vercel/python"
         }
     ],
@@ -21,20 +21,14 @@
         },
         {
             "src": "/(.*)",
-            "dest": "/frontend/out/$1"
+            "dest": "/frontend/public/$1"
         }
     ],
-    "env": {
-        "DJANGO_SETTINGS_MODULE": "mysite.settings",
-        "PYTHONUNBUFFERED": "1",
-        "SECRET_KEY": "your-secret-key-here",
-        "NEXT_PUBLIC_API_URL": "/api"
-    },
     "build": {
         "env": {
             "NEXT_PUBLIC_API_URL": "/api"
         },
-        "command": "cd frontend && yarn install && yarn build && cd ../backend && python manage.py collectstatic --noinput && python manage.py migrate"
+        "command": "cd frontend && yarn install && yarn build && cd .. && python manage.py collectstatic --noinput && python manage.py migrate"
     },
     "public": true,
     "output": {
