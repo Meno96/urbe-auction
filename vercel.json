@@ -2,26 +2,27 @@
     "version": 2,
     "builds": [
         {
-            "src": "frontend/package.json",
-            "use": "@vercel/node"
+            "src": "UrbE/wsgi.py",
+            "use": "@vercel/python",
+            "config": { "maxLambdaSize": "15mb", "runtime": "python3.10" }
         },
         {
-            "src": "frontend/next.config.js",
-            "use": "@vercel/next"
-        },
-        {
-            "src": ".",
-            "use": "@vercel/python"
+            "src": "build_files.sh",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "staticfiles_build"
+            }
         }
     ],
     "routes": [
         {
+            "src": "frontend/public/(.*)",
+            "dest": "/static/$1"
+        },
+        {
             "src": "/(.*)",
-            "dest": "/frontend/public/$1"
+            "dest": "UrbE/wsgi.py"
         }
     ],
-    "env": {
-        "NEXT_PUBLIC_API_URL": "/api"
-    },
     "public": true
 }
