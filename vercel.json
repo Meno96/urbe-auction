@@ -1,17 +1,15 @@
 {
-    "functions": {
-        "api/**/*": {
-            "memory": 512
+    "builds": [
+        {
+            "src": "urbe-django/wsgi.py",
+            "use": "@vercel/python",
+            "config": { "maxLambdaSize": "15mb", "runtime": "python3.10.6" }
         }
-    },
+    ],
     "routes": [
         {
-            "src": "/api/(.*)",
-            "dest": "http://127.0.0.1:8000/api/$1"
-        },
-        {
             "src": "/(.*)",
-            "dest": "/index.html"
+            "dest": "urbe-django/wsgi.py"
         }
     ]
 }
