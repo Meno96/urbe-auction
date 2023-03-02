@@ -20,11 +20,8 @@
             "dest": "/frontend/public/$1"
         }
     ],
-    "build": {
-        "env": {
-            "NEXT_PUBLIC_API_URL": "/api"
-        },
-        "command": "cd frontend && yarn install && yarn build && cd .. && python manage.py collectstatic --noinput && python manage.py migrate"
+    "env": {
+        "NEXT_PUBLIC_API_URL": "/api"
     },
     "public": true
 }
