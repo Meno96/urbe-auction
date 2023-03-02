@@ -38,6 +38,6 @@
     },
     "public": true,
     "output": {
-        "directory": "public"
+        "directory": "frontend/public"
     }
 }
