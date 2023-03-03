@@ -2,27 +2,26 @@
     "version": 2,
     "builds": [
         {
-            "src": "UrbE/wsgi.py",
+            "src": "backend/**",
             "use": "@vercel/python",
-            "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+            "config": { "maxLambdaSize": "50mb", "runtime": "python3.9" }
         },
         {
-            "src": "build_files.sh",
+            "src": "frontend/**",
             "use": "@vercel/static-build",
             "config": {
-                "distDir": "staticfiles_build"
+                "distDir": "frontend/.next"
             }
         }
     ],
     "routes": [
         {
-            "src": "frontend/public/(.*)",
-            "dest": "/static/$1"
+            "src": "/api/(.*)",
+            "dest": "backend/api.py"
         },
         {
             "src": "/(.*)",
-            "dest": "UrbE/wsgi.py"
+            "dest": "frontend/$1"
         }
-    ],
-    "public": true
+    ]
 }
