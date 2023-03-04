@@ -6,6 +6,10 @@ RUN apt-get update && \
     apt-get install -y build-essential && \
     apt-get install -y libpq-dev
 
+# Installa Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+
 # Imposta la directory di lavoro
 WORKDIR /app
 
@@ -30,4 +34,4 @@ ENV REDIS_URL=redis://redis-14301.c135.eu-central-1-1.ec2.cloud.redislabs.com:14
 ENV REDIS_PASSWORD=9L27MC6wimmm9gVViL2Z8GarZ0LRx22D
 
 # Avvia il server Django con Redis come cache
-CMD ["sh", "-c", "redis-server --daemonize yes && python manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "redis-server --daemonize yes && python manage.py runserver 0.0.0.0:8000  & yarn start"]
