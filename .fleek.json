@@ -1,0 +1,58 @@
+{
+    "build": {
+      "steps": [
+        {
+          "name": "backend",
+          "args": [
+            "pip",
+            "install",
+            "-r",
+            "backend/requirements.txt"
+          ]
+        },
+        {
+          "name": "frontend",
+          "args": [
+            "yarn",
+            "install"
+          ]
+        },
+        {
+          "name": "frontend",
+          "args": [
+            "yarn",
+            "run",
+            "build"
+          ]
+        },
+        {
+          "name": "frontend",
+          "args": [
+            "yarn",
+            "next",
+            "export"
+          ]
+        }
+      ]
+    },
+    "main": {
+      "path": "/public",
+      "index": "index.html"
+    },
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "backend/api.py"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/public/$1"
+      }
+    ],
+    "env": {
+      "DATABASE_URL": "sqlite:///db.sqlite3",
+      "REDIS_URL": "redis://redis-14301.c135.eu-central-1-1.ec2.cloud.redislabs.com:14301",
+      "REDIS_PASSWORD": "9L27MC6wimmm9gVViL2Z8GarZ0LRx22D"
+    }
+  }
+  
