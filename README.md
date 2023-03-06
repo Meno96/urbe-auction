@@ -15,9 +15,15 @@ This project is a web application for a charity auction organized by UrbE, a mic
 
 The repo contain the submodules to backend and frontend.
 
+### Backend
+
 The backend uses Django to handle the backend of the web application. It includes various components such as models, views, and serializers that interact with the database and handle the logic of the application. The Django app also includes APIs to allow communication between the frontend and the backend. Overall, this part of the project plays a crucial role in managing the backend and ensuring that the web application runs smoothly.
 
+### Frontend
+
 The frontend uses Next.js, a React framework, to handle it. It includes pages, components, and styles for the different sections of the application, such as the home page, auction details page, and user dashboard. It also communicates with the backend of the application, which is built using Django and hosted on Moralis, to fetch and display data such as the current auctions, bids, and user information. Additionally, it integrates with Moralis and Web3 to handle Ethereum transactions, including minting and bidding on NFTs.
+
+### TheGraph
 
 In addition to communicating with the backend, the frontend also integrates with The Graph to index events and perform queries on the Ethereum blockchain. This allows the application to display real-time data on auctions and bids and update the UI accordingly.
 
