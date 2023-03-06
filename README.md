@@ -19,13 +19,13 @@ The repo contain the submodules to backend and frontend.
 
 The backend uses Django to handle the backend of the web application. It includes various components such as models, views, and serializers that interact with the database and handle the logic of the application. 
 
-The Django app also includes APIs to allow communication between the frontend and the backend. 
+Additionally, the Django app includes APIs that allow communication between the frontend and the backend. 
 
 Overall, this part of the project plays a crucial role in managing the backend and ensuring that the web application runs smoothly.
 
 ### Frontend
 
-The frontend uses Next.js, a React framework, to handle it. It includes pages, components, and styles for the different sections of the application, such as the home page, auction details page, and user dashboard. 
+The frontend uses Next.js, a React framework, to handle it. It includes pages, components, and styles for different sections of the application, such as the home page, auction details page, and user dashboard. 
 
 It also communicates with the backend of the application, which is built using Django and hosted on Moralis, to fetch and display data such as the current auctions, bids, and user information. 
 
@@ -33,11 +33,11 @@ Additionally, it integrates with Moralis and Web3 to handle Ethereum transaction
 
 ### TheGraph
 
-In addition to communicating with the backend, the frontend also integrates with The Graph to index events and perform queries on the Ethereum blockchain. This allows the application to display real-time data on auctions and bids and update the UI accordingly.
+In addition to communicating with the backend, the frontend also integrates with The Graph to index events and perform queries on the Ethereum blockchain for real-time data on auctions and bids. This allows the application to display real-time data on auctions and bids and update the UI accordingly.
 
 ### Hardhat
 
-The project uses Solidity, a programming language designed specifically for smart contracts on Ethereum, to write the auction and the NFT contract, and Hardhat to test everything.
+The project uses Solidity, a programming language designed specifically for smart contracts on Ethereum, to write the auction and the NFT contract, and Hardhat to test the functionality of the smart contracts.
 
 <hr/>
   
@@ -142,7 +142,7 @@ Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser
 
 ## 🚀&nbsp; How it's suppose to work?
 
-The platform is based on the sale of NFTs that represent real objects, whoever appropriates the NFT at auction has the right to receive the object in question, and thanks to the blockchain this process is completely transparent.
+The platform is based on the sale of NFTs that represent real objects, whoever wins the auction for the NFT has the right to receive the corresponding object, and thanks to the blockchain this process is completely transparent.
 
 The whole thing is based on two smart contracts (which can be seen in the Hardhat repo):
 * UrbEVehicleNft: manages the various Nfts, there is the possibility to add any type of Nft to the collection when you want.
