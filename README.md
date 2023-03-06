@@ -35,6 +35,10 @@ Additionally, it integrates with Moralis and Web3 to handle Ethereum transaction
 
 In addition to communicating with the backend, the frontend also integrates with The Graph to index events and perform queries on the Ethereum blockchain. This allows the application to display real-time data on auctions and bids and update the UI accordingly.
 
+### Hardhat
+
+The project uses Solidity, a programming language designed specifically for smart contracts on Ethereum, to write the auction and the NFT contract, and Hardhat to test everything.
+
 <hr/>
   
 ## 🛠️&nbsp; How to run
