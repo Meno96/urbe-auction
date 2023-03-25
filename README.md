@@ -3,7 +3,7 @@
 </h1>
 
 <br/>
-
+ 
 <p align="center">
 <img src="./assets/GitHubImages/Admin-Homepage2.png" width="80%" alt="UrbE Auction Homepage">
 </a>
