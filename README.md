@@ -8,7 +8,7 @@
 <img src="./assets/GitHubImages/Admin-Homepage2.png" width="80%" alt="UrbE Auction Homepage">
 </a>
 </p>
-
+ 
 <br/>
 
 This project is a web application for a charity auction organized by UrbE, a micromobility company.
